@@ -1,0 +1,31 @@
+### Hetzner Online AG - installimage
+# Loopback device:
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet manual
+
+# for single IPs     
+auto vmbr0
+iface vmbr0 inet static
+       address   xxx.xx.xx.xxx      #Copy address, netmask, gateway and broadcast from default installation's eth0 interface
+       netmask   255.255.255.192
+       gateway   xxx.xxx.xxx.xxx
+       broadcast xxx.xxx.xxx.xxx
+       bridge_ports eth0
+       bridge_stp off
+       bridge_fd 0
+       up route add -net xxx.xxx.xxx.xxx netmask 255.255.255.192 gw xxx.xxx.xxx.xxx vmbr0 #Copy this line from default eth0 interface and change interface to vmbr0
+       up ip route add xxx.xxx.xxx.xxx/32 dev vmbr0 #Replace xxx.xxx.xxx.xxx with the additional ip and do this kind of line for every additional ip you have
+
+
+# for a subnet
+auto vmbr1
+iface vmbr1 inet static
+       address   xxx.xxx.xxx.xxx #First usable ip from the subnet (note that hetzner web-interface shows also ip's which ain't usable(one on the top and one on the bottom))
+       netmask   255.255.255.248
+       bridge_ports none
+       bridge_stp off
+       bridge_fd 0
+
